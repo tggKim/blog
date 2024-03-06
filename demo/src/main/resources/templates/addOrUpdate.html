@@ -1,0 +1,79 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org">
+    <meta charset = "utf-8">
+    <head>
+        <title>
+            블로그
+        </title>
+        <style>
+            body {
+                text-align: center;
+            }
+            input[type="text"] {
+                width: 50%;
+                margin: 10px;
+            }
+            textarea {
+                width: 80%;
+                height: 85%;
+                margin: 10px;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>포스팅</h3>
+        <hr>
+        <input type="text" th:value="${post.id}" hidden="hidden" id="id">
+        <input th:if="${post.id}==null" type="text" placeholder="제목 입력" id="title1">
+        <input th:if="${post.id}!=null" type="text" th:value="${post.title}" id="title2">
+        <br>
+        <textarea th:if="${post.id}==null" placeholder="내용 입력" id="content1"></textarea>
+        <textarea th:if="${post.id}!=null" th:text="${post.content}" id="content2"></textarea>
+        <br>
+        <input th:if="${post.id}==null" type="button" value="등록" id="addButton">
+        <input th:if="${post.id}!=null" type="button" value="수정" id="updateButton">
+        <input type="button" value="취소" th:onclick="|location.href='@{/blog/posts}'|">
+    </body>
+    <script>
+        var addButton = document.getElementById("addButton");
+        if(addButton){
+           addButton.addEventListener('click',function(){
+                fetch('/api/posts',{
+                    method: 'POST',
+                    headers:{
+                            "Content-Type":"application/json",
+                    },
+                    body: JSON.stringify({
+                        title: document.getElementById('title1').value,
+                        content: document.getElementById('content1').value
+                    })
+                }).then(() => {
+                    alert('등록이 완료되었습니다.');
+                    location.replace('/blog/posts')
+                });
+           });
+        }
+
+        var updateButton = document.getElementById("updateButton");
+            if(updateButton){
+                updateButton.addEventListener('click',function(){
+                    var params=new URLSearchParams(location.search);
+                    var id = params.get('id');
+                    fetch('/api/posts/'+id, {
+                        method: 'PUT',
+                        headers:{
+                            "Content-Type":"application/json",
+                        },
+                        body: JSON.stringify({
+                            title: document.getElementById('title2').value,
+                            content: document.getElementById('content2').value
+                        })
+                    }).then(() => {
+                        alert('수정이 완료되었습니다.');
+                        location.replace('/blog/posts/'+id)
+                    });
+                });
+            }
+    </script>
+</html>

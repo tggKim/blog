@@ -1,0 +1,45 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org">
+    <meta charset = "utf-8">
+    <head>
+        <title>
+            블로그
+        </title>
+        <style>
+            body {
+                text-align: center;
+            }
+            table{
+                margin: 0 auto;
+                font-size: 30px;
+            }
+            th, td {
+                padding: 10px;
+            }
+            div{
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>목록</h3>
+        <hr>
+        <div>
+            <input th:onclick="|location.href='@{/blog/post}'|" type="button" value="글쓰기">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                </tr>
+            </thead>
+            <tbody th:each="post : ${posts}">
+                <tr>
+                    <td><a th:href="@{/blog/posts/{id}(id=${post.id})}" th:text="${post.id}"></a></td>
+                    <td><a th:href="@{/blog/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org">
+    <meta charset = "utf-8">
+    <head>
+        <title>
+            블로그
+        </title>
+        <style>
+            body {
+                text-align: center;
+            }
+            input[type="text"] {
+                width: 50%;
+                margin: 10px;
+            }
+            textarea {
+                width: 80%;
+                height: 85%;
+                margin: 10px;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>포스팅</h3>
+        <hr>
+        <input type="text" th:value="${post.id}" hidden="hidden" id="id">
+        <input type="text" th:value="${post.title}" readonly>
+        <br>
+        <textarea th:text="${post.content}" readonly></textarea>
+        <br>
+        <input type="button" value="수정" th:onclick="|location.href='@{/blog/post?id={id}(id=${post.id})}'|">
+        <input type="button" value="삭제" id="delete">
+        <input type="button" value="취소" th:onclick="|location.href='@{/blog/posts}'|">
+    </body>
+    <script>
+        var button = document.getElementById("delete");
+           button.addEventListener('click',function(){
+               var postId = document.getElementById('id').value;
+               fetch('/api/posts/' + postId, {
+                   method: 'DELETE'
+               }).then(() => {
+                   alert('삭제가 완료되었습니다.');
+                   location.replace('/blog/posts')
+               });
+           });
+    </script>
+</html>
